@@ -1,5 +1,4 @@
 require 'shellwords'
-require 'open3'
 require 'dragonfly'
 
 module Dragonfly
@@ -43,12 +42,7 @@ module Dragonfly
     else
 
       def run_command(command)
-        Open3.popen3 command do |stdin, stdout, stderr, wait_thread|
-          stdin.close_write # make sure it doesn't hang
-          status = wait_thread.value
-          raise CommandFailed, "Command failed (#{command}) with exit status #{status.exitstatus} and stderr #{stderr.read}" unless status.success?
-          stdout.read
-        end
+        system command
       end
 
     end
