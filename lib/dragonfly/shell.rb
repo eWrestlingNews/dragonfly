@@ -43,7 +43,7 @@ module Dragonfly
 
       def run_command(command)
         out = nil
-        IO.popen(command) { |o| out = out.read }
+        IO.popen(command) { |o| out = out.read; out.close }
         status = $?
         raise CommandFailed, "Command failed (#{command}) with exit status #{status.exitstatus}" unless status.success?
         out
