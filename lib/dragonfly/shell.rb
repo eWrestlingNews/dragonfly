@@ -42,18 +42,10 @@ module Dragonfly
     else
 
       def run_command(command)
-        rout, wout = IO.pipe
-        rerr, werr = IO.pipe
-
-        pid = Process.spawn(command, out: rout, err: rerr)
-        _, status = Process.wait2(pid)
-
-        wout.close
-        werr.close
-
-        raise CommandFailed, "Command failed (#{command}) with exit status #{status.exitstatus} and error #{rerr.readlines.join("\n")}" unless status.success?
-
-        rout.readlines.join("\n")
+        out = IO.popen(command)
+        status = $?
+        raise CommandFailed, "Command failed (#{command}) with exit status #{status.exitstatus}" unless status.success?
+        out.read
       end
 
     end
