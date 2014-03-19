@@ -42,7 +42,8 @@ module Dragonfly
     else
 
       def run_command(command)
-        system command
+        pid = Kernel.spawn(command)
+        Process.wait pid
       end
 
     end
