@@ -42,10 +42,11 @@ module Dragonfly
     else
 
       def run_command(command)
-        out = IO.popen(command)
+        out = nil
+        IO.popen(command) { |o| out = out.read }
         status = $?
         raise CommandFailed, "Command failed (#{command}) with exit status #{status.exitstatus}" unless status.success?
-        out.read
+        out
       end
 
     end
